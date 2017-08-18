@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/item_fm_net_icon"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        fresco:actualImageScaleType="focusCrop"
+        fresco:placeholderImage="@mipmap/zhan"/>
+    <TextView
+        android:id="@+id/item_fm_net_name"
+        android:text="教你自制五款味道秒杀喜茶的音频"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+        <View
+            android:background="#e6e6e6"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+</LinearLayout>
