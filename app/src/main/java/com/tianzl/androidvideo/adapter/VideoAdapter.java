@@ -45,6 +45,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 listener.onItemClick(mData.get(position),position);
             }
         });
+
     }
 
     @Override
