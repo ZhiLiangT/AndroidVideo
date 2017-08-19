@@ -1,12 +1,15 @@
 package com.tianzl.androidvideo.surfaceview;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -65,10 +68,18 @@ public class SurfaceActivity extends AppCompatActivity implements
     private GestureDetector mGestureDetector;
     private boolean isShowMenu;
     private int type;
+    /**横竖屏标识*/
+    private boolean screenDirection=true;
 
     /**视频的宽高*/
-    private int videoHeight;
-    private int videoWidth;
+    private float videoHeight;
+    private float videoWidth;
+    /**系统屏幕的宽高*/
+    private float systemWidth;
+    private float systemHeight;
+    /**控件的宽高*/
+    private float surWidth;
+    private float surHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +123,10 @@ public class SurfaceActivity extends AppCompatActivity implements
          *  是创建一个push的'surface'，主要的特点就是不进行缓冲
          */
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        systemWidth = dm.widthPixels;
+        systemHeight=dm.heightPixels;
     }
 
     private void initView() {
@@ -156,8 +171,65 @@ public class SurfaceActivity extends AppCompatActivity implements
                 pause();
                 break;
             case R.id.surface_iv_full:
+                screenCut();
                 break;
         }
+    }
+    /**手动切换横竖屏*/
+    public void  screenCut(){
+        if (screenDirection){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            screenDirection=false;
+        }else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            screenDirection=true;
+        }
+    }
+
+
+    /**监听横竖屏切换*/
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
+            showNavigationBar();
+            double xsca=surWidth/videoWidth;
+            double ysca=surHeight/videoHeight;
+            double r=min(xsca,ysca);
+            double width=videoWidth*r;
+            double height=videoHeight*r;
+            ViewGroup.LayoutParams params= surfaceView.getLayoutParams();
+            params.width= (int) width;
+            params.height= (int) height;
+            surfaceView.setLayoutParams(params);
+            Toast.makeText(SurfaceActivity.this, "现在是竖屏", Toast.LENGTH_SHORT).show();
+        }
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+            hideNavigationBar();
+//            rootLayout.setSystemUiVisibility(View.INVISIBLE);
+            /**等比例缩放视频尺寸*/
+            double xsca=systemHeight/videoWidth;
+            double ysca=systemWidth/videoHeight;
+            double r=min(xsca,ysca);
+            double width=videoWidth*r;
+            double height=videoHeight*r;
+            ViewGroup.LayoutParams params= surfaceView.getLayoutParams();
+            params.width= (int) width;
+            params.height= (int) height;
+            surfaceView.setLayoutParams(params);
+            Toast.makeText(SurfaceActivity.this, "现在是横屏", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void showNavigationBar(){
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+    }
+    public void hideNavigationBar() {
+        int uiFlags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_FULLSCREEN; // hide status bar
+        getWindow().getDecorView().setSystemUiVisibility(uiFlags);
     }
 
     /**定时任务*/
@@ -271,15 +343,6 @@ public class SurfaceActivity extends AppCompatActivity implements
             Log.i(TAG, "surfaceHolder被销毁了");
         }
     }
-    public static double div(double v1, double v2, int scale) {
-        if (scale < 0) {
-            throw new IllegalArgumentException(
-                    "The scale must be a positive integer or zero");
-        }
-        BigDecimal b1 = new BigDecimal(Double.toString(v1));
-        BigDecimal b2 = new BigDecimal(Double.toString(v2));
-        return b1.divide(b2, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
-    }
     /**播放*/
     private void play(){
         /**设置多媒体流类型*/
@@ -292,18 +355,16 @@ public class SurfaceActivity extends AppCompatActivity implements
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(final MediaPlayer mediaPlayer) {
-
-                    float videoWidth=mediaPlayer.getVideoWidth();
-                    float videoHeight=mediaPlayer.getVideoHeight();
-                    Log.i(TAG,"视频的宽高"+"videowidth: "+videoWidth+"videoHeight: "+videoHeight);
-                    Log.i(TAG,"控件的宽高"+"宽"+surfaceView.getWidth()+"高"+surfaceView.getHeight());
-                    double xsca=surfaceView.getWidth()/videoWidth;
-                    double ysca=surfaceView.getHeight()/videoHeight;
-                    Log.i(TAG,"视频缩放的比例"+"xsca  "+xsca+"ysca"+ysca);
+                    /**等比例缩放视频尺寸*/
+                    videoWidth=mediaPlayer.getVideoWidth();
+                    videoHeight=mediaPlayer.getVideoHeight();
+                    surWidth=surfaceView.getWidth();
+                    surHeight=surfaceView.getHeight();
+                    double xsca=surWidth/videoWidth;
+                    double ysca=surHeight/videoHeight;
                     double r=min(xsca,ysca);
                     double width=videoWidth*r;
                     double height=videoHeight*r;
-                    Log.i(TAG,"setOnPreparedListener:  "+"width: "+width+" height: "+height);
                     ViewGroup.LayoutParams params= surfaceView.getLayoutParams();
                     params.width= (int) width;
                     params.height= (int) height;
@@ -358,7 +419,7 @@ public class SurfaceActivity extends AppCompatActivity implements
     /**播放出错时的监听*/
     @Override
     public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-        Log.e(TAG,"播放出错时的监听");
+        Toast.makeText(this,"播放出错，请重新播放",Toast.LENGTH_SHORT).show();
         return false;
     }
     /**播放结束时的监听*/
@@ -374,8 +435,6 @@ public class SurfaceActivity extends AppCompatActivity implements
     /**视频尺寸的监听*/
     @Override
     public void onVideoSizeChanged(MediaPlayer mediaPlayer, int width, int height) {
-        videoHeight=mediaPlayer.getVideoHeight();
-        videoWidth=mediaPlayer.getVideoWidth();
 
     }
     /**触摸事件*/

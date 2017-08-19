@@ -16,7 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,8 +30,12 @@
             android:configChanges="keyboard|orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity android:name=".test.ObBitmapActivity" />
-        <activity android:name=".audio.AudioPlayerActivity"></activity>
-        <activity android:name=".surfaceview.SurfaceActivity"></activity>
+        <activity android:name=".audio.AudioPlayerActivity" />
+        <activity
+            android:name=".surfaceview.SurfaceActivity"
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".test.TestSurfaceActivity"
+            android:configChanges="orientation|screenSize"/>
     </application>
 
 </manifest>

@@ -22,7 +22,6 @@ import java.io.IOException;
 public class MyTextureView extends TextureView implements
 		TextureView.SurfaceTextureListener {
 	private String TAG = "MyTextureView";
-
 	private String url;
 	public VideoState mState;
 	private Surface surface;
