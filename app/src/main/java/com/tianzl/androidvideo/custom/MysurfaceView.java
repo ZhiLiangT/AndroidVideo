@@ -37,7 +37,6 @@ public class MysurfaceView extends SurfaceView implements
         ,SurfaceHolder.Callback{
     private static final String TAG=MysurfaceView.class.getSimpleName();
 
-
     private MediaPlayer mediaPlayer;
     private SurfaceHolder holder;
     /**视频播放的Url*/

@@ -69,9 +69,7 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
         videoView.setOnPreparedListener(new MyPlayOnPreparedListener());
         //播放完成回调
         videoView.setOnCompletionListener( new MyPlayerOnCompletionListener());
-
     }
-
     private void initData() {
 
         videoView.setMediaController(new MediaController(this));
@@ -137,7 +135,6 @@ public class VideoViewActivity extends AppCompatActivity implements View.OnClick
             handler.postDelayed(this, 3000);
         }
     };
-
 
     @Override
     protected void onResume() {

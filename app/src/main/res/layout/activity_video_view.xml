@@ -31,6 +31,7 @@
     </RelativeLayout>
     <LinearLayout
         android:id="@+id/video_top_ll"
+        android:visibility="gone"
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -75,6 +76,7 @@
     </LinearLayout>
     <LinearLayout
         android:id="@+id/video_bottom_ll"
+        android:visibility="gone"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:layout_width="match_parent"

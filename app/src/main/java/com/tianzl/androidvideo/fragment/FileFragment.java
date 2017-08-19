@@ -98,11 +98,11 @@ public class FileFragment extends Fragment {
                 intent.putExtra("VIDEO_TYPE",0);
                 switch (MainActivity.flag){
                     case MainActivity.VIDEOVIEW_FLAG:
-                        intent.setClass(getActivity(), TestSurfaceActivity.class);
+                        intent.setClass(getActivity(), VideoViewActivity.class);
                         startActivity(intent);
                         break;
                     case MainActivity.SURFACEVIEW_FLAG:
-                        intent.setClass(getActivity(), SurfaceActivity.class);
+                        intent.setClass(getActivity(), TestSurfaceActivity.class);
                         startActivity(intent);
                         break;
                     case MainActivity.TEXTUREVIEW_FLAG:

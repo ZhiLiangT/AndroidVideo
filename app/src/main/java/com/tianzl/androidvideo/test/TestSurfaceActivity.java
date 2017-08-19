@@ -86,6 +86,12 @@ public class TestSurfaceActivity extends AppCompatActivity implements View.OnCli
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                /**当进度条停止修改的时候触发*/
+                /**取得当前进度条的刻度*/
+                int progress = seekBar.getProgress();
+                /**设置当前播放的位置*/
+                mysurfaceView.seekTo(progress);
+                tvPlayTime.setText(""+CommTools.LongToHms(progress));
 
 
             }
