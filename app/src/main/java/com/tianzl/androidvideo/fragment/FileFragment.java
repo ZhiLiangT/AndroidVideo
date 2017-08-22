@@ -21,6 +21,7 @@ import com.tianzl.androidvideo.adapter.VideoInfoAdapter;
 import com.tianzl.androidvideo.entity.VideoInfo;
 import com.tianzl.androidvideo.surfaceview.SurfaceActivity;
 import com.tianzl.androidvideo.test.TestSurfaceActivity;
+import com.tianzl.androidvideo.textureview.TextureViewActivity;
 import com.tianzl.androidvideo.utils.CommTools;
 import com.tianzl.androidvideo.videoview.VideoViewActivity;
 
@@ -102,10 +103,12 @@ public class FileFragment extends Fragment {
                         startActivity(intent);
                         break;
                     case MainActivity.SURFACEVIEW_FLAG:
-                        intent.setClass(getActivity(), TestSurfaceActivity.class);
+                        intent.setClass(getActivity(), SurfaceActivity.class);
                         startActivity(intent);
                         break;
                     case MainActivity.TEXTUREVIEW_FLAG:
+                        intent.setClass(getActivity(), TextureViewActivity.class);
+                        startActivity(intent);
                         break;
                 }
             }

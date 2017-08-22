@@ -33,9 +33,11 @@
         <activity android:name=".audio.AudioPlayerActivity" />
         <activity
             android:name=".surfaceview.SurfaceActivity"
-            android:configChanges="orientation|screenSize"/>
-        <activity android:name=".test.TestSurfaceActivity"
-            android:configChanges="orientation|screenSize"/>
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name=".test.TestSurfaceActivity"
+            android:configChanges="orientation|screenSize" />
+        <activity android:name=".textureview.TextureViewActivity"></activity>
     </application>
 
 </manifest>

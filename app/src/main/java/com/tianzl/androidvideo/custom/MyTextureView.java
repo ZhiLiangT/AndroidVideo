@@ -198,7 +198,7 @@ public class MyTextureView extends TextureView implements
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			if (msg.what == 0) {
-				if (listener != null && mState == VideoState.palying) {
+				if (listener != null && mState == VideoState.palying &&mMediaPlayer!=null) {
 					listener.onPlaying(mMediaPlayer.getDuration(),
 							mMediaPlayer.getCurrentPosition());
 					sendEmptyMessageDelayed(0, 1000);
@@ -285,9 +285,7 @@ public class MyTextureView extends TextureView implements
 
 	@Override
 	public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-		mMediaPlayer.pause();
-		mMediaPlayer.stop();
-		mMediaPlayer.reset();
+
 		if (listener != null)
 			listener.onTextureDestory();
 		return false;

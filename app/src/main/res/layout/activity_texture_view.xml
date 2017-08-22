@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/texture_rl"
+        android:background="@android:color/black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.tianzl.androidvideo.custom.MyTextureView
+            android:id="@+id/mytexture"
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/texture_top_ll"
+        android:layout_alignTop="@+id/texture_rl"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/black_55"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/texture_iv_back"
+            android:layout_width="50dp"
+            android:padding="10dp"
+            android:src="@mipmap/back"
+            android:layout_height="match_parent"
+            />
+
+        <TextView
+            android:id="@+id/texture_tv_sort"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:text="1/5" />
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/texture_iv_download"
+            android:src="@mipmap/download"
+            android:layout_width="50dp"
+            android:padding="8dp"
+            android:layout_height="match_parent"
+            android:text="00:00"  />
+
+        <ImageView
+            android:id="@+id/texture_iv_share"
+            android:src="@mipmap/share"
+            android:layout_width="50dp"
+            android:padding="14dp"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/texture_bottom_ll"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="@color/black_55"
+        android:layout_height="50dp">
+        <ImageView
+            android:id="@+id/texture_iv_play"
+            android:layout_width="50dp"
+            android:padding="15dp"
+            android:src="@drawable/img_play_selected"
+            android:layout_height="match_parent"
+            android:text="播放" />
+
+        <TextView
+            android:id="@+id/texture_tv_start_time"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/white"
+            android:text="00:00" />
+        <SeekBar
+            android:id="@+id/texture_seekbar"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/texture_tv_total_time"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="00:00"  />
+
+        <ImageView
+            android:id="@+id/texture_iv_full"
+            android:src="@drawable/img_full_selected"
+            android:layout_width="50dp"
+            android:padding="14dp"
+            android:layout_height="match_parent"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

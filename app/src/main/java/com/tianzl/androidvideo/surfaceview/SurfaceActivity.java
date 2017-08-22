@@ -29,8 +29,6 @@ import com.tianzl.androidvideo.entity.VideoInfo;
 import com.tianzl.androidvideo.utils.CommTools;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-
 
 import static java.lang.Math.min;
 
@@ -127,6 +125,7 @@ public class SurfaceActivity extends AppCompatActivity implements
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         systemWidth = dm.widthPixels;
         systemHeight=dm.heightPixels;
+
     }
 
     private void initView() {
@@ -437,17 +436,19 @@ public class SurfaceActivity extends AppCompatActivity implements
     public void onVideoSizeChanged(MediaPlayer mediaPlayer, int width, int height) {
 
     }
+
     /**触摸事件*/
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         return mGestureDetector.onTouchEvent(motionEvent);
     }
+
     /**手势监听*/
-    GestureDetector.OnGestureListener listener = new GestureDetector.OnGestureListener(){
+    GestureDetector.OnGestureListener listener = new GestureDetector.OnGestureListener() {
 
         @Override
         public boolean onDown(MotionEvent motionEvent) {
-//            Log.i(TAG, "onDown");
+
             if (isShowMenu){
                 isShowHideTitle(false);
             }else {

@@ -18,6 +18,7 @@ import com.tianzl.androidvideo.adapter.VideoAdapter;
 
 import com.tianzl.androidvideo.entity.VideoInfo;
 import com.tianzl.androidvideo.surfaceview.SurfaceActivity;
+import com.tianzl.androidvideo.textureview.TextureViewActivity;
 import com.tianzl.androidvideo.utils.Constant;
 import com.tianzl.androidvideo.videoview.VideoViewActivity;
 
@@ -68,6 +69,8 @@ public class NetFragment extends Fragment {
                         startActivity(intent);
                         break;
                     case MainActivity.TEXTUREVIEW_FLAG:
+                        intent.setClass(getActivity(),TextureViewActivity.class);
+                        startActivity(intent);
                         break;
                 }
             }
