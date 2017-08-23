@@ -103,7 +103,7 @@ public class FileFragment extends Fragment {
                         startActivity(intent);
                         break;
                     case MainActivity.SURFACEVIEW_FLAG:
-                        intent.setClass(getActivity(), SurfaceActivity.class);
+                        intent.setClass(getActivity(), TestSurfaceActivity.class);
                         startActivity(intent);
                         break;
                     case MainActivity.TEXTUREVIEW_FLAG:

@@ -12,6 +12,7 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -31,11 +32,14 @@ import static java.lang.Math.min;
  */
 
 public class MysurfaceView extends SurfaceView implements
-        MediaPlayer.OnErrorListener
+        View.OnTouchListener
+        ,MediaPlayer.OnErrorListener
         ,MediaPlayer.OnCompletionListener
         ,MediaPlayer.OnVideoSizeChangedListener
         ,SurfaceHolder.Callback{
     private static final String TAG=MysurfaceView.class.getSimpleName();
+    /**手势*/
+    private GestureDetector gestureDetector;
 
     private MediaPlayer mediaPlayer;
     private SurfaceHolder holder;
@@ -68,6 +72,9 @@ public class MysurfaceView extends SurfaceView implements
         super(context, attrs, defStyleAttr);
         init(context);
     }
+
+
+
     public interface  OnVideoPlayingListener{
         void onVideoSizeChanged(int vWidth, int vHeight);
         void onPlaying(int duration, int percent);
@@ -90,10 +97,12 @@ public class MysurfaceView extends SurfaceView implements
         mediaPlayer.setOnCompletionListener(this);
         /**视频尺寸的监听*/
         mediaPlayer.setOnVideoSizeChangedListener(this);
+        setOnTouchListener(this);
     }
     /**初始化*/
     private void init(Context context) {
         this.context=context;
+        gestureDetector=new GestureDetector(context,new MyOnGestureListener());
         mediaPlayer=new MediaPlayer();
         holder=this.getHolder();
         /**
@@ -160,7 +169,7 @@ public class MysurfaceView extends SurfaceView implements
     }
     /**销毁 回收资源*/
     public void finishVideo(){
-        mediaPlayer.stop();
+        stop();
         mediaPlayer.release();
     }
     /**等比例缩放视频*/
@@ -253,6 +262,78 @@ public class MysurfaceView extends SurfaceView implements
         int videoH=mediaPlayer.getVideoHeight();
         if (listener!=null){
             listener.onVideoSizeChanged(videoW,videoH);
+        }
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        gestureDetector.onTouchEvent(motionEvent);
+        return true;
+
+    }
+    class MyOnGestureListener extends GestureDetector.SimpleOnGestureListener {
+        public MyOnGestureListener() {
+            super();
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            Log.i(TAG,"onSingleTapUp 单击事件");
+            return super.onSingleTapUp(e);
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            Log.i(TAG,"onLongPress 长按事件");
+            super.onLongPress(e);
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            Log.i(TAG,"onScroll 滑动事件");
+            return super.onScroll(e1, e2, distanceX, distanceY);
+        }
+
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            Log.i(TAG,"onFling 抛事件  列表离开屏幕继续滚动 就是该状态");
+            return super.onFling(e1, e2, velocityX, velocityY);
+        }
+
+        @Override
+        public void onShowPress(MotionEvent e) {
+            Log.i(TAG,"onShowPress  ");
+            super.onShowPress(e);
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            Log.i(TAG,"onDown  按下事件");
+            return super.onDown(e);
+        }
+
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            Log.i(TAG,"onDoubleTap   双击的第二下时触发");
+            return super.onDoubleTap(e);
+        }
+
+        @Override
+        public boolean onDoubleTapEvent(MotionEvent e) {
+            Log.i(TAG,"onDoubleTapEvent 双击的第二下的down和up都触发");
+            return super.onDoubleTapEvent(e);
+        }
+
+        @Override
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            Log.i(TAG,"onSingleTapConfirmed  确认发生了单击事件 双击不触发");
+            return super.onSingleTapConfirmed(e);
+        }
+
+        @Override
+        public boolean onContextClick(MotionEvent e) {
+            Log.i(TAG,"onDoubleTapEvent ");
+            return super.onContextClick(e);
         }
     }
     /**SurfaceHolder被创建*/
