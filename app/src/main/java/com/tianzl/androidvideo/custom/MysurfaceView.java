@@ -12,12 +12,14 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.SeekBar;
 
 import com.tianzl.androidvideo.surfaceview.SurfaceActivity;
@@ -25,6 +27,7 @@ import com.tianzl.androidvideo.utils.CommTools;
 
 import java.io.IOException;
 
+import static android.content.Context.AUDIO_SERVICE;
 import static java.lang.Math.min;
 
 /**
@@ -59,6 +62,15 @@ public class MysurfaceView extends SurfaceView implements
     private float surWidth;
     private float surHeight;
     private Context context;
+    private int k;
+    /** 最大声音 */
+    private int mMaxVolume;
+    /** 当前声音 */
+    private int mVolume = -1;
+    /** 当前亮度 */
+    private float mBrightness = -1f;
+    private AudioManager mAudioManager;
+
     public MysurfaceView(Context context) {
         super(context);
         init(context);
@@ -101,6 +113,9 @@ public class MysurfaceView extends SurfaceView implements
     }
     /**初始化*/
     private void init(Context context) {
+        mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        mMaxVolume = mAudioManager
+                .getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         this.context=context;
         gestureDetector=new GestureDetector(context,new MyOnGestureListener());
         mediaPlayer=new MediaPlayer();
@@ -290,7 +305,17 @@ public class MysurfaceView extends SurfaceView implements
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            Log.i(TAG,"onScroll 滑动事件");
+            float mOldX = e1.getX(), mOldY = e1.getY();
+            int y = (int) e2.getRawY();
+            Display disp =((Activity)context).getWindowManager().getDefaultDisplay();
+            int windowWidth = disp.getWidth();
+            int windowHeight = disp.getHeight();
+
+            if (mOldX > windowWidth * 4.0 / 5)// 右边滑动
+                onVolumeSlide(((mOldY - y) / windowHeight));
+            else if (mOldX < windowWidth / 5.0)// 左边滑动
+                onVolumeSlide(((mOldY - y) / windowHeight));
+                onBrightnessSlide((mOldY - y) / windowHeight);
             return super.onScroll(e1, e2, distanceX, distanceY);
         }
 
@@ -347,4 +372,50 @@ public class MysurfaceView extends SurfaceView implements
     /**SurfaceHolder被销毁*/
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {}
+    /**
+     * 滑动改变声音大小
+     * @param percent
+     */
+    private void onVolumeSlide(float percent) {
+
+        Log.d("滑动的距离",percent+"");
+        if (mVolume == -1) {
+            mVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            if (mVolume < 0)
+                mVolume = 0;
+        }
+        int index = (int) (percent * mMaxVolume) + mVolume;
+        if (index > mMaxVolume){
+            index = mMaxVolume;
+        }
+        else if (index < 0){
+            index = 0;
+        }
+        // 变更声音
+        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, index, 0);
+
+    }
+    /**
+     * 滑动改变亮度
+     *
+     * @param percent
+     */
+    private void onBrightnessSlide(float percent) {
+        if (mBrightness < 0) {
+            mBrightness =(( Activity)context).getWindow().getAttributes().screenBrightness;
+            if (mBrightness <= 0.00f)
+                mBrightness = 0.50f;
+            if (mBrightness < 0.01f)
+                mBrightness = 0.01f;
+        }
+        WindowManager.LayoutParams lpa = (( Activity)context).getWindow().getAttributes();
+        lpa.screenBrightness = mBrightness + percent;
+        if (lpa.screenBrightness > 1.0f)
+            lpa.screenBrightness = 1.0f;
+        else if (lpa.screenBrightness < 0.01f)
+            lpa.screenBrightness = 0.01f;
+        (( Activity)context).getWindow().setAttributes(lpa);
+
+    }
+
 }

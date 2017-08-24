@@ -123,7 +123,7 @@ public class TextureViewActivity extends AppCompatActivity implements View.OnCli
             }
         }
 
-        myTextureView.setVideoMode(MyTextureView.CENTER_CROP_MODE);
+        myTextureView.setVideoMode(MyTextureView.CENTER_MODE);
 
     }
 
